@@ -18,12 +18,13 @@ class DnsService(val records: MutableList<DnsRecord>, val validator: QTypeValida
         return records.indexOf(record)
     }
 
-    fun getRecord(qType: String): List<DnsRecord> {
+    fun getRecord(qType: String): List<DnsRecordDto> {
         if (!validator.isValidQType(qType)) throw RuntimeException("not found type")
 
         val validRecord = records
 //            .filter{record -> record.qType == QType.valueOf(qType)}
             .filter { it.qType == QType.valueOf(qType) }
+            .map { DnsRecordDto(it.domain, it.qType.toString(), it.content) }
 
         if (validRecord.isEmpty()) throw RuntimeException("not found record")
 
